@@ -30,4 +30,22 @@ RSpec.describe 'item show page', type: :feature do
     expect(page).to have_content("Sold by: #{@bike_shop.name}")
     expect(page).to have_css("img[src*='#{@chain.image}']")
   end
+
+  it "cannot navigate to item page once it is deleted" do
+    visit "/items/#{@chain.id}"
+
+    click_link "Delete Item"
+
+    visit "/items/#{@chain.id}"
+
+    expect(current_path).to eq("/items")
+    expect(page).to have_content("Sorry, that item no longer exists.")
+  end
 end
+
+
+# As a user
+# When I visit an items show page and delete the item
+# And try to go to that items show page again
+# I see a flash message saying that the item no longer exists
+# And I am redirected to the items index page
